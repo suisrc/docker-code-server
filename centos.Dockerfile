@@ -84,7 +84,8 @@ RUN echo "**** install code-server ****" && \
             | jq -r '.assets[] | select(.browser_download_url | contains("linux-x86_64")) | .browser_download_url'); \
     fi &&\
     curl -o /tmp/code.tar.gz -L "${CODE_URL}" && \
-    tar xzf /tmp/code.tar.gz -C /usr/local/bin/ --strip-components=1 --wildcards code-server*/code-server && \
+    tar xzf /tmp/code.tar.gz -C /usr/lib/code-server/ && \
+    ln -s /usr/lib/code-server/code-server /usr/bin/code-server &&\
     rm -rf /tmp/*
 
 # install code server extension
@@ -108,7 +109,7 @@ COPY ["settings.json", "locale.json", "/root/.local/share/code-server/User/"]
 #ENV LANG="zh_CN.UTF-8" \
 #    SHELL=/bin/zsh
 
-COPY entrypoint.sh /usr/local/bin/
+COPY entrypoint.sh /usr/bin/
 
 # worksapce
 RUN mkdir -p /home/project
