@@ -70,6 +70,7 @@ RUN echo "**** install code-server ****" && \
             | jq -r '.assets[] | select(.browser_download_url | contains("linux-x86_64")) | .browser_download_url'); \
     fi &&\
     curl -o /tmp/code.tar.gz -L "${CODE_URL}" && \
+    mkdir -p /usr/lib/code-server &&\
     tar xzf /tmp/code.tar.gz -C /usr/lib/code-server/ && \
     ln -s /usr/lib/code-server/code-server /usr/bin/code-server &&\
     rm -rf /tmp/*
