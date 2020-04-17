@@ -23,10 +23,10 @@ jobs:
       - name: Push github image
         run: |
           REGISTRY_URL=docker.pkg.github.com
-          IMAGE_NAME=centos7
+          IMAGE_OS=centos7
           echo "${{ secrets.GITHUB_TOKEN }}" | docker login $REGISTRY_URL -u ${{ github.actor }} --password-stdin
 
-          IMAGE_ID=$REGISTRY_URL/${{ github.repository }}/$IMAGE_NAME
+          IMAGE_ID=$REGISTRY_URL/${{ github.repository }}/$IMAGE_OS
 
           # Change all uppercase to lowercase
           IMAGE_ID=$(echo $IMAGE_ID | tr '[A-Z]' '[a-z]')
@@ -48,12 +48,13 @@ jobs:
       - name: Push quay image
         run: |
           REGISTRY_URL=quay.io
+          IMAGE_OS=centos7
           echo "${{ secrets.QUAY_TOKEN }}" | docker login $REGISTRY_URL -u ${{ secrets.QUAY_USER }} --password-stdin
 
           IMAGE_ID=$REGISTRY_URL/$DOCKER_IMAGE_NAME
           echo IMAGE_ID=$IMAGE_ID
 
-          VERSION=$(echo "${{ github.ref }}" | sed -e 's,.*/\(.*\),\1,')
+          VERSION=$(echo "${{ github.ref }}" | sed -e 's,.*/\(.*\),\1,')-$IMAGE_OS
           [[ "${{ github.ref }}" == "refs/tags/"* ]] && VERSION=$(echo $VERSION | sed -e 's/^v//')
           echo VERSION=$VERSION
 
@@ -63,12 +64,13 @@ jobs:
       - name: Push docker image
         run: |
           REGISTRY_URL=docker.io
+          IMAGE_OS=centos7
           echo "${{ secrets.DOCKER_TOKEN }}" | docker login $REGISTRY_URL -u ${{ secrets.DOCKER_USER }} --password-stdin
 
           IMAGE_ID=$REGISTRY_URL/$DOCKER_IMAGE_NAME
           echo IMAGE_ID=$IMAGE_ID
 
-          VERSION=$(echo "${{ github.ref }}" | sed -e 's,.*/\(.*\),\1,')
+          VERSION=$(echo "${{ github.ref }}" | sed -e 's,.*/\(.*\),\1,')-$IMAGE_OS
           [[ "${{ github.ref }}" == "refs/tags/"* ]] && VERSION=$(echo $VERSION | sed -e 's/^v//')
           echo VERSION=$VERSION
 
@@ -88,10 +90,10 @@ jobs:
       - name: Push github image
         run: |
           REGISTRY_URL=docker.pkg.github.com
-          IMAGE_NAME=debian9
+          IMAGE_OS=debian9
           echo "${{ secrets.GITHUB_TOKEN }}" | docker login $REGISTRY_URL -u ${{ github.actor }} --password-stdin
 
-          IMAGE_ID=$REGISTRY_URL/${{ github.repository }}/$IMAGE_NAME
+          IMAGE_ID=$REGISTRY_URL/${{ github.repository }}/$IMAGE_OS
           IMAGE_ID=$(echo $IMAGE_ID | tr '[A-Z]' '[a-z]')
           echo IMAGE_ID=$IMAGE_ID
 
@@ -105,12 +107,13 @@ jobs:
       - name: Push quay image
         run: |
           REGISTRY_URL=quay.io
+          IMAGE_OS=debian9
           echo "${{ secrets.QUAY_TOKEN }}" | docker login $REGISTRY_URL -u ${{ secrets.QUAY_USER }} --password-stdin
 
           IMAGE_ID=$REGISTRY_URL/$DOCKER_IMAGE_NAME
           echo IMAGE_ID=$IMAGE_ID
 
-          VERSION=$(echo "${{ github.ref }}" | sed -e 's,.*/\(.*\),\1,')
+          VERSION=$(echo "${{ github.ref }}" | sed -e 's,.*/\(.*\),\1,')-$IMAGE_OS
           [[ "${{ github.ref }}" == "refs/tags/"* ]] && VERSION=$(echo $VERSION | sed -e 's/^v//')
           echo VERSION=$VERSION
 
@@ -120,12 +123,13 @@ jobs:
       - name: Push docker image
         run: |
           REGISTRY_URL=docker.io
+          IMAGE_OS=debian9
           echo "${{ secrets.DOCKER_TOKEN }}" | docker login $REGISTRY_URL -u ${{ secrets.DOCKER_USER }} --password-stdin
 
           IMAGE_ID=$REGISTRY_URL/$DOCKER_IMAGE_NAME
           echo IMAGE_ID=$IMAGE_ID
 
-          VERSION=$(echo "${{ github.ref }}" | sed -e 's,.*/\(.*\),\1,')
+          VERSION=$(echo "${{ github.ref }}" | sed -e 's,.*/\(.*\),\1,')-$IMAGE_OS
           [[ "${{ github.ref }}" == "refs/tags/"* ]] && VERSION=$(echo $VERSION | sed -e 's/^v//')
           echo VERSION=$VERSION
 
