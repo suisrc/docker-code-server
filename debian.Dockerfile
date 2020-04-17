@@ -17,15 +17,17 @@ LABEL maintainer="suisrc@outlook.com"
 ENV container docker
 # linux and softs
 RUN echo "**** update linux ****" && \
-    mv /etc/apt/sources.list /etc/apt/sources.list.bak && \
-    echo "deb ${LINUX_MIRRORS}/debian/ stretch main non-free contrib" >>/etc/apt/sources.list &&\
-    echo "deb-src ${LINUX_MIRRORS}/debian/ stretch main non-free contrib" >>/etc/apt/sources.list &&\
-    echo "deb ${LINUX_MIRRORS}/debian-security stretch/updates main" >>/etc/apt/sources.list &&\
-    echo "deb-src ${LINUX_MIRRORS}/debian-security stretch/updates main" >>/etc/apt/sources.list &&\
-    echo "deb ${LINUX_MIRRORS}/debian/ stretch-updates main non-free contrib" >>/etc/apt/sources.list &&\
-    echo "deb-src ${LINUX_MIRRORS}/debian/ stretch-updates main non-free contrib" >>/etc/apt/sources.list &&\
-    echo "deb ${LINUX_MIRRORS}/debian/ stretch-backports main non-free contrib" >>/etc/apt/sources.list &&\
-    echo "deb-src ${LINUX_MIRRORS}/debian/ stretch-backports main non-free contrib" >>/etc/apt/sources.list &&\
+    if [ ! -z ${LINUX_MIRRORS+x} ]; then \
+        mv /etc/apt/sources.list /etc/apt/sources.list.bak && \
+        echo "deb ${LINUX_MIRRORS}/debian/ stretch main non-free contrib" >>/etc/apt/sources.list &&\
+        echo "deb-src ${LINUX_MIRRORS}/debian/ stretch main non-free contrib" >>/etc/apt/sources.list &&\
+        echo "deb ${LINUX_MIRRORS}/debian-security stretch/updates main" >>/etc/apt/sources.list &&\
+        echo "deb-src ${LINUX_MIRRORS}/debian-security stretch/updates main" >>/etc/apt/sources.list &&\
+        echo "deb ${LINUX_MIRRORS}/debian/ stretch-updates main non-free contrib" >>/etc/apt/sources.list &&\
+        echo "deb-src ${LINUX_MIRRORS}/debian/ stretch-updates main non-free contrib" >>/etc/apt/sources.list &&\
+        echo "deb ${LINUX_MIRRORS}/debian/ stretch-backports main non-free contrib" >>/etc/apt/sources.list &&\
+        echo "deb-src ${LINUX_MIRRORS}/debian/ stretch-backports main non-free contrib" >>/etc/apt/sources.list; \
+    fi &&\
     apt-get update && \
     apt-get install --no-install-recommends -y \
         dumb-init sudo ca-certificates curl git jq net-tools zsh \
@@ -33,7 +35,7 @@ RUN echo "**** update linux ****" && \
     rm -rf /tmp/* /var/tmp/* /var/lib/apt/lists/*
 
 # fonts
-RUN echo "**** install sarasa-gothic fonts ****" && \
+RUN echo "**** install sarasa-gothic ****" && \
     if [ -z ${FONT_URL+x} ]; then \
         if [ -z ${FONT_RELEASE+x} ]; then \
             FONT_RELEASE=$(curl -sX GET "https://api.github.com/repos/suisrc/Sarasa-Gothic/releases/latest" \
