@@ -77,7 +77,7 @@ RUN echo "**** install code-server ****" && \
     fi &&\
     curl -o /tmp/code.tar.gz -L "${CODE_URL}" && \
     mkdir -p /usr/lib/code-server &&\
-    tar xzf /tmp/code.tar.gz -C /usr/lib/code-server/ && \
+    tar xzf /tmp/code.tar.gz -C /usr/lib/code-server/ --strip-components=1 && \
     ln -s /usr/lib/code-server/code-server /usr/bin/code-server &&\
     rm -rf /tmp/*
 
