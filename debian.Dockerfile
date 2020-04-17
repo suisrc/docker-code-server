@@ -9,7 +9,7 @@ ARG FONT_RELEASE
 ARG OH_MY_ZSH_SH_URL
 ARG OH_MY_ZSH_SUGGES
 
-ARG LINUX_MIRRORS
+ARG LINUX_MIRRORS=https://mirrors.aliyun.com
 
 # set version label
 LABEL maintainer="suisrc@outlook.com"
@@ -17,17 +17,15 @@ LABEL maintainer="suisrc@outlook.com"
 ENV container docker
 # linux and softs
 RUN echo "**** update linux ****" && \
-    if [ ! -z ${LINUX_MIRRORS+x} ]; then \
-        mv /etc/apt/sources.list /etc/apt/sources.list.bak && \
-        echo "deb ${LINUX_MIRRORS}/debian/ stretch main non-free contrib" >>/etc/apt/sources.list &&\
-        echo "deb-src ${LINUX_MIRRORS}/debian/ stretch main non-free contrib" >>/etc/apt/sources.list &&\
-        echo "deb ${LINUX_MIRRORS}/debian-security stretch/updates main" >>/etc/apt/sources.list &&\
-        echo "deb-src ${LINUX_MIRRORS}/debian-security stretch/updates main" >>/etc/apt/sources.list &&\
-        echo "deb ${LINUX_MIRRORS}/debian/ stretch-updates main non-free contrib" >>/etc/apt/sources.list &&\
-        echo "deb-src ${LINUX_MIRRORS}/debian/ stretch-updates main non-free contrib" >>/etc/apt/sources.list &&\
-        echo "deb ${LINUX_MIRRORS}/debian/ stretch-backports main non-free contrib" >>/etc/apt/sources.list &&\
-        echo "deb-src ${LINUX_MIRRORS}/debian/ stretch-backports main non-free contrib" >>/etc/apt/sources.list; \
-    fi &&\
+    mv /etc/apt/sources.list /etc/apt/sources.list.bak && \
+    echo "deb ${LINUX_MIRRORS}/debian/ stretch main non-free contrib" >>/etc/apt/sources.list &&\
+    echo "deb-src ${LINUX_MIRRORS}/debian/ stretch main non-free contrib" >>/etc/apt/sources.list &&\
+    echo "deb ${LINUX_MIRRORS}/debian-security stretch/updates main" >>/etc/apt/sources.list &&\
+    echo "deb-src ${LINUX_MIRRORS}/debian-security stretch/updates main" >>/etc/apt/sources.list &&\
+    echo "deb ${LINUX_MIRRORS}/debian/ stretch-updates main non-free contrib" >>/etc/apt/sources.list &&\
+    echo "deb-src ${LINUX_MIRRORS}/debian/ stretch-updates main non-free contrib" >>/etc/apt/sources.list &&\
+    echo "deb ${LINUX_MIRRORS}/debian/ stretch-backports main non-free contrib" >>/etc/apt/sources.list &&\
+    echo "deb-src ${LINUX_MIRRORS}/debian/ stretch-backports main non-free contrib" >>/etc/apt/sources.list &&\
     apt-get update && \
     apt-get install --no-install-recommends -y \
         dumb-init sudo ca-certificates curl git jq net-tools zsh \

@@ -9,7 +9,7 @@ ARG FONT_RELEASE
 ARG OH_MY_ZSH_SH_URL
 ARG OH_MY_ZSH_SUGGES
 
-ARG LINUX_MIRRORS
+ARG LINUX_MIRRORS=https://mirrors.aliyun.com
 
 # set version label
 LABEL maintainer="suisrc@outlook.com"
@@ -18,13 +18,11 @@ ENV container docker
 # linux and softs
 # https://mirrors.aliyun.com
 RUN echo "**** update linux ****" && \
-    if [ ! -z ${LINUX_MIRRORS+x} ]; then \
-        mv /etc/yum.repos.d/CentOS-Base.repo /etc/yum.repos.d/CentOS-Base.repo.bak &&\
-        curl -fsSL ${LINUX_MIRRORS}/repo/Centos-7.repo -o /etc/yum.repos.d/CentOS-Base.repo &&\
-        sed -i -e '/mirrors.cloud.aliyuncs.com/d' -e '/mirrors.aliyuncs.com/d' /etc/yum.repos.d/CentOS-Base.repo &&\
-        sed -i 's/gpgcheck=1/gpgcheck=0/g' /etc/yum.repos.d/CentOS-Base.repo &&\
-        curl -fsSL ${LINUX_MIRRORS}/repo/epel-7.repo -o /etc/yum.repos.d/epel.repo; \
-    fi &&\
+    mv /etc/yum.repos.d/CentOS-Base.repo /etc/yum.repos.d/CentOS-Base.repo.bak &&\
+    curl -fsSL ${LINUX_MIRRORS}/repo/Centos-7.repo -o /etc/yum.repos.d/CentOS-Base.repo &&\
+    sed -i -e '/mirrors.cloud.aliyuncs.com/d' -e '/mirrors.aliyuncs.com/d' /etc/yum.repos.d/CentOS-Base.repo &&\
+    sed -i 's/gpgcheck=1/gpgcheck=0/g' /etc/yum.repos.d/CentOS-Base.repo &&\
+    curl -fsSL ${LINUX_MIRRORS}/repo/epel-7.repo -o /etc/yum.repos.d/epel.repo &&\
     yum clean all && yum makecache && yum update -y &&\
     yum install -y sudo curl git jq net-tools zsh p7zip nano fontconfig ntpdate && \
     rm -rf /tmp/* /var/tmp/* /var/cache/yum
