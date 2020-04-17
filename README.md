@@ -1,1 +1,1 @@
-# docker-code-server
+# code-server

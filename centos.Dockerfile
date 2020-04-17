@@ -1,48 +1,36 @@
 FROM centos:7.7.1908
 # args
+ARG CODE_URL
 ARG CODE_RELEASE
+
 ARG FONT_URL
 ARG FONT_RELEASE
-ARG CODE_URL
+
 ARG OH_MY_ZSH_SH_URL
 ARG OH_MY_ZSH_SUGGES
+
+ARG LINUX_MIRRORS
 
 # set version label
 LABEL maintainer="suisrc@outlook.com"
 
 ENV container docker
 # linux and softs
-RUN echo "**** update linux and install softs ****" && \
-    mv /etc/yum.repos.d/CentOS-Base.repo /etc/yum.repos.d/CentOS-Base.repo.bak &&\
-    curl -fsSL https://mirrors.aliyun.com/repo/Centos-7.repo -o /etc/yum.repos.d/CentOS-Base.repo &&\
-    sed -i -e '/mirrors.cloud.aliyuncs.com/d' -e '/mirrors.aliyuncs.com/d' /etc/yum.repos.d/CentOS-Base.repo &&\
-    sed -i 's/gpgcheck=1/gpgcheck=0/g' /etc/yum.repos.d/CentOS-Base.repo &&\
-    curl -fsSL https://mirrors.aliyun.com/repo/epel-7.repo -o /etc/yum.repos.d/epel.repo &&\
-    echo "[kubernetes]" >> /etc/yum.repos.d/kubernetes.repo &&\
-    echo "name=Kubernetes" >> /etc/yum.repos.d/kubernetes.repo &&\
-    echo "baseurl=https://mirrors.aliyun.com/kubernetes/yum/repos/kubernetes-el7-x86_64/" >> /etc/yum.repos.d/kubernetes.repo &&\
-    echo "enabled=1" >> /etc/yum.repos.d/kubernetes.repo &&\
-    echo "gpgcheck=0" >> /etc/yum.repos.d/kubernetes.repo &&\
-    echo "repo_gpgcheck=0" >> /etc/yum.repos.d/kubernetes.repo &&\
-    echo "gpgkey=https://mirrors.aliyun.com/kubernetes/yum/doc/yum-key.gpg https://mirrors.aliyun.com/kubernetes/yum/doc/rpm-package-key.gpg" >> /etc/yum.repos.d/kubernetes.repo &&\
-    echo "" >> /etc/yum.repos.d/kubernetes.repo &&\
+# https://mirrors.aliyun.com
+RUN echo "**** update linux ****" && \
+    if [ ! -z ${LINUX_MIRRORS+x} ]; then \
+        mv /etc/yum.repos.d/CentOS-Base.repo /etc/yum.repos.d/CentOS-Base.repo.bak &&\
+        curl -fsSL ${LINUX_MIRRORS}/repo/Centos-7.repo -o /etc/yum.repos.d/CentOS-Base.repo &&\
+        sed -i -e '/mirrors.cloud.aliyuncs.com/d' -e '/mirrors.aliyuncs.com/d' /etc/yum.repos.d/CentOS-Base.repo &&\
+        sed -i 's/gpgcheck=1/gpgcheck=0/g' /etc/yum.repos.d/CentOS-Base.repo &&\
+        curl -fsSL ${LINUX_MIRRORS}/repo/epel-7.repo -o /etc/yum.repos.d/epel.repo &&\
+    fi &&\
     yum clean all && yum makecache && yum update -y &&\
-    yum install -y \
-        sudo \
-        curl \
-        git \
-        jq \
-        net-tools \
-        zsh \
-        p7zip \
-        nano \
-        fontconfig \
-        ntpdate \
-        kubectl && \
+    yum install -y sudo curl git jq net-tools zsh p7zip nano fontconfig ntpdate && \
     rm -rf /tmp/* /var/tmp/* /var/cache/yum
 
 # fonts
-RUN echo "**** install sarasa-gothic fonts ****" && \
+RUN echo "**** install sarasa-gothic ****" && \
     if [ -z ${FONT_URL+x} ]; then \
         if [ -z ${FONT_RELEASE+x} ]; then \
             FONT_RELEASE=$(curl -sX GET "https://api.github.com/repos/suisrc/Sarasa-Gothic/releases/latest" \

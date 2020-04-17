@@ -1,11 +1,14 @@
 FROM debian:stretch-slim
 # args
+ARG CODE_URL
 ARG CODE_RELEASE
+
 ARG FONT_URL
 ARG FONT_RELEASE
-ARG CODE_URL
+
 ARG OH_MY_ZSH_SH_URL
 ARG OH_MY_ZSH_SUGGES
+
 ARG LINUX_MIRRORS
 
 # set version label
@@ -13,7 +16,7 @@ LABEL maintainer="suisrc@outlook.com"
 
 ENV container docker
 # linux and softs
-RUN echo "**** update linux and install softs ****" && \
+RUN echo "**** update linux ****" && \
     if [ ! -z ${LINUX_MIRRORS+x} ]; then \
         mv /etc/apt/sources.list /etc/apt/sources.list.bak && \
         echo "deb ${LINUX_MIRRORS}/debian/ stretch main non-free contrib" >>/etc/apt/sources.list &&\
@@ -27,20 +30,8 @@ RUN echo "**** update linux and install softs ****" && \
     fi &&\
     apt-get update && \
     apt-get install --no-install-recommends -y \
-        dumb-init \
-        sudo \
-        ca-certificates \
-        curl \
-        git \
-        jq \
-        net-tools \
-        zsh \
-        vim \
-        p7zip \
-        nano \
-        fontconfig \
-        ntpdate \
-        locales && \
+        dumb-init sudo ca-certificates curl git jq net-tools zsh \
+        vim p7zip nano fontconfig ntpdate locales && \
     rm -rf /tmp/* /var/tmp/* /var/lib/apt/lists/*
 
 # fonts
@@ -76,6 +67,7 @@ RUN echo "**** install oh-my-zsh ****" && \
     sed -i "s/ZSH_THEME=\"robbyrussell\"/ZSH_THEME=\"agnoster\"/g" /root/.zshrc
 
 # Code-Server
+# tar xzf /tmp/code.tar.gz -C /usr/local/bin/ --strip-components=1 --wildcards code-server*/code-server && \
 RUN echo "**** install code-server ****" && \
     if [ -z ${CODE_URL+x} ]; then \
         if [ -z ${CODE_RELEASE+x} ]; then \
@@ -86,7 +78,8 @@ RUN echo "**** install code-server ****" && \
             | jq -r '.assets[] | select(.browser_download_url | contains("linux-x86_64")) | .browser_download_url'); \
     fi &&\
     curl -o /tmp/code.tar.gz -L "${CODE_URL}" && \
-    tar xzf /tmp/code.tar.gz -C /usr/local/bin/ --strip-components=1 --wildcards code-server*/code-server && \
+    tar xzf /tmp/code.tar.gz -C /usr/lib/code-server/ && \
+    ln -s /usr/lib/code-server/code-server /usr/bin/code-server &&\
     rm -rf /tmp/*
 
 # install code server extension
