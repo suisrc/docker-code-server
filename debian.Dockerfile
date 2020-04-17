@@ -103,7 +103,7 @@ ENV LC_ALL=zh_CN.UTF-8 \
 COPY entrypoint.sh /usr/local/bin/
 
 # worksapce
-RUN mkdir -p /home/project
+RUN mkdir -p /home/project && chmod +x /usr/local/bin/entrypoint.sh
 WORKDIR  /home/project
 #VOLUME [ "/home/project" ]
 

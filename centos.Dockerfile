@@ -105,10 +105,10 @@ COPY ["settings.json", "locale.json", "/root/.local/share/code-server/User/"]
 #ENV LANG="zh_CN.UTF-8" \
 #    SHELL=/bin/zsh
 
-COPY entrypoint.sh /usr/bin/
+COPY entrypoint.sh /usr/local/bin/
 
 # worksapce
-RUN mkdir -p /home/project
+RUN mkdir -p /home/project && chmod +x /usr/local/bin/entrypoint.sh
 WORKDIR  /home/project
 #VOLUME [ "/home/project" ]
 
