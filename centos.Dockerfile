@@ -9,7 +9,7 @@ ARG FONT_RELEASE
 ARG OH_MY_ZSH_SH_URL
 ARG OH_MY_ZSH_SUGGES
 
-ARG LINUX_MIRRORS=https://mirrors.aliyun.com
+ARG LINUX_MIRRORS=http://mirrors.aliyun.com
 
 # set version label
 LABEL maintainer="suisrc@outlook.com"
@@ -22,7 +22,8 @@ RUN echo "**** update linux ****" && \
         curl -fsSL ${LINUX_MIRRORS}/repo/Centos-7.repo -o /etc/yum.repos.d/CentOS-Base.repo &&\
         sed -i -e '/mirrors.cloud.aliyuncs.com/d' -e '/mirrors.aliyuncs.com/d' /etc/yum.repos.d/CentOS-Base.repo &&\
         sed -i 's/gpgcheck=1/gpgcheck=0/g' /etc/yum.repos.d/CentOS-Base.repo &&\
-        curl -fsSL ${LINUX_MIRRORS}/repo/epel-7.repo -o /etc/yum.repos.d/epel.repo &&\echo "[kubernetes]" >> /etc/yum.repos.d/kubernetes.repo &&\
+        curl -fsSL ${LINUX_MIRRORS}/repo/epel-7.repo -o /etc/yum.repos.d/epel.repo &&\
+        echo "[kubernetes]" >> /etc/yum.repos.d/kubernetes.repo &&\
         echo "name=Kubernetes" >> /etc/yum.repos.d/kubernetes.repo &&\
         echo "baseurl=${LINUX_MIRRORS}/kubernetes/yum/repos/kubernetes-el7-x86_64/" >> /etc/yum.repos.d/kubernetes.repo &&\
         echo "enabled=1" >> /etc/yum.repos.d/kubernetes.repo &&\

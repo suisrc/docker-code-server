@@ -9,7 +9,7 @@ ARG FONT_RELEASE
 ARG OH_MY_ZSH_SH_URL
 ARG OH_MY_ZSH_SUGGES
 
-ARG LINUX_MIRRORS=https://mirrors.aliyun.com
+ARG LINUX_MIRRORS=http://mirrors.aliyun.com
 
 # set version label
 LABEL maintainer="suisrc@outlook.com"
